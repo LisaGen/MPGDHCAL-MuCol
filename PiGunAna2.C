@@ -74,8 +74,9 @@ void PiGunAna2::Loop()
   //TH1F *h15_energy_ecalB = new TH1F("h15_energy_ecalB","Hit energy (ECAL Barrel);E_{reco hit} [GeV]",100.,0.,1.);
   TH1F *h_energy_hcalB = new TH1F("h_energy_hcalB","Hit energy (HCAL Barrel);E_{reco hit} [GeV]",100.,0.,1.);
   TH1F *h_NHit_Layer_hcalB = new TH1F("h_NHit_Layer_hcalB","Number of hit per layer (HCAL Barrel); Layer ID",100.,1,100);
-   
-    
+  TH1F *h_NHit_Layer_hcalE = new TH1F("h_NHit_Layer_hcalE","Number of hit per layer (HCAL Endcap); Layer ID",100.,1,100);
+  TH1F *hRecoMatched_Energy = new TH1F("hRecoMatched_Energy","Energy of reconstructed particle matched with the generated",100.,1,100);
+  TH1F *hEnergyRes = new TH1F("hEnergyRes","E_mc - E_rec / E_rec",100,-2,2);
    if (fChain == 0) return;
 
    Long64_t nentries = fChain->GetEntriesFast();
@@ -108,11 +109,19 @@ void PiGunAna2::Loop()
       if (fabs((mcpdg[imc]))==11)  hSimEle->Fill(mcene[imc]); 
       if (fabs((mcpdg[imc]))==22)  hSimGamma->Fill(mcene[imc]);
       if (fabs((mcpdg[imc]))==2212) hSimProt->Fill(mcene[imc]);
-
+      double dR_tmp =1000;
       for (int ireco=0; ireco<nrec; ++ireco){
           TLorentzVector rcpart;
           rcpart.SetPxPyPzE(rcmox[ireco],rcmoy[ireco],rcmoz[ireco], rcene[ireco]);
-          if (rcpart.DrEtaPhi(simpart)<0.1) cout<<" sim is reco! simPDG="<<mcpdg[imc]<<" reco pdg="<<rctyp[ireco]<<endl;
+	  double dR = rcpart.DrEtaPhi(simpart);
+          if (dR < dR_tmp) {
+	    dR_tmp = dR;
+	    if(dR_tmp<0.1){
+	    cout<<" sim is reco! simPDG="<<mcpdg[imc]<<" reco pdg="<<rctyp[ireco]<<endl;
+	    hRecoMatched_Energy->Fill(rcene[ireco]);
+	    hEnergyRes->Fill((rcene[ireco]-mcene[imc])/mcene[imc]);
+	     } 
+	    }  
       } // ireco loop             
       
       
@@ -157,8 +166,9 @@ void PiGunAna2::Loop()
           // --- HCAL endcap
           if ( system==11  && side==1 ){
               
-             // h_occupancy_hcalE->Fill(capoy[CHit], capox[CHit]);
-             // h_depth_hcalE->Fill(capoz[CHit],capoy[CHit]);
+	    //h_occupancy_hcalE->Fill(capoy[CHit], capox[CHit]);
+            // h_depth_hcalE->Fill(capoz[CHit],capoy[CHit]);
+	     h_NHit_Layer_hcalE->Fill(layer);
               
           }
 
@@ -176,7 +186,7 @@ void PiGunAna2::Loop()
 
 
    TCanvas *c2 = new TCanvas("c2","c2", 600, 800);
-   c2->Divide(3,1);
+   c2->Divide(3,3);
    c2->cd(1);
    hSimPion->Draw();
    hSimPion->SetMaximum(5000);
@@ -193,7 +203,10 @@ void PiGunAna2::Loop()
     hSimPionPt->Draw();
     c2->cd(3);
     hSimPionTheta->Draw();
-
+    c2->cd(4);
+    hRecoMatched_Energy->Draw();
+    c2->cd(5);
+    hEnergyRes->Draw();
    //  hSimPion->GetYaxis()->SetRangeUser(0., std::max(hSimPion->GetXmax(), hSimEle->GetXmax(), hSimGamma->GetXmax(), hSimProt->GetXmax()));
 
 
@@ -205,8 +218,9 @@ void PiGunAna2::Loop()
    hCHitPosR->Draw();
    c3->cd(3);
     //hCHitPosX->Draw();
-    TCanvas *c4 = new TCanvas("c3","c3", 900, 900);
-    c4->Divide(3,2);
+
+   TCanvas *c4 = new TCanvas("c3","c3", 1200, 1200);
+    c4->Divide(3,3);
     c4->cd(1);
     h_layout_calo->Draw();
     c4->cd(2);
@@ -219,4 +233,6 @@ void PiGunAna2::Loop()
     h_energy_hcalB->Draw();
     c4->cd(6);
     h_NHit_Layer_hcalB->Draw();
+    c4->cd(7);
+    h_NHit_Layer_hcalE->Draw();
 }
