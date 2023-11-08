@@ -6,29 +6,7 @@
 
 void PiGunAna2::Loop()
 {
-//   In a ROOT session, you can do:
-//      root> .L PiGunAna2.C
-//      root> PiGunAna2 t
-//      root> t.GetEntry(12); // Fill t data members with entry number 12
-//      root> t.Show();       // Show values of entry 12
-//      root> t.Show(16);     // Read and show values of entry 16
-//      root> t.Loop();       // Loop on all entries
-//
 
-//     This is the loop skeleton where:
-//    jentry is the global entry number in the chain
-//    ientry is the entry number in the current Tree
-//  Note that the argument to GetEntry must be:
-//    jentry for TChain::GetEntry
-//    ientry for TTree::GetEntry and TBranch::GetEntry
-//
-//       To read only selected branches, Insert statements like:
-// METHOD1:
-//    fChain->SetBranchStatus("*",0);  // disable all branches
-//    fChain->SetBranchStatus("branchname",1);  // activate branchname
-// METHOD2: replace line
-//    fChain->GetEntry(jentry);       //read all branches
-//by  b_branchname->GetEntry(ientry); //read only this branch
 
   TH1F* h_mc_pdg;
   TH1F* h_mc_pdg_notStable;
@@ -100,32 +78,45 @@ void PiGunAna2::Loop()
       //cout<<imc<<" Sim ID: "<<mcpdg[imc]<<endl;
       TLorentzVector simpart;
       simpart.SetPxPyPzE(mcmox[imc],mcmoy[imc],mcmoz[imc], mcene[imc]);
+        if (fabs((mcpdg[imc]))==11)  hSimEle->Fill(mcene[imc]);
+        if (fabs((mcpdg[imc]))==22)  hSimGamma->Fill(mcene[imc]);
+        if (fabs((mcpdg[imc]))==2212) hSimProt->Fill(mcene[imc]);
+        
         if (fabs((mcpdg[imc]))==211 && mcgst[imc] == 1) {
                 hSimPion->Fill(mcene[imc]);
                 hSimPionPt->Fill(simpart.Pt());
-                hSimPionTheta->Fill(simpart.Theta());
-            cout<<" pion pt="<<simpart.Pt()<<" pdgID="<<mcpdg[imc]<<endl;
-        }
-      if (fabs((mcpdg[imc]))==11)  hSimEle->Fill(mcene[imc]); 
-      if (fabs((mcpdg[imc]))==22)  hSimGamma->Fill(mcene[imc]);
-      if (fabs((mcpdg[imc]))==2212) hSimProt->Fill(mcene[imc]);
-      double dR_tmp =1000;
+                hSimPionTheta->Fill(simpart.Eta());
+     //cout<< "pion pt="<<simpart.Pt()<<" pdgID="<<mcpdg[imc]<<endl;
+        
+      
+      double dR =1000;
+      TLorentzVector RecoPionAss;
+            
+      cout<<"isim ="<<imc<<" pdgid="<<mcpdg[imc]<<" pt="<<simpart.Pt()<<endl;
       for (int ireco=0; ireco<nrec; ++ireco){
           TLorentzVector rcpart;
           rcpart.SetPxPyPzE(rcmox[ireco],rcmoy[ireco],rcmoz[ireco], rcene[ireco]);
-	  double dR = rcpart.DrEtaPhi(simpart);
-          if (dR < dR_tmp) {
-	    dR_tmp = dR;
-	    if(dR_tmp<0.1){
-	    cout<<" sim is reco! simPDG="<<mcpdg[imc]<<" reco pdg="<<rctyp[ireco]<<endl;
-	    hRecoMatched_Energy->Fill(rcene[ireco]);
-	    hEnergyRes->Fill((rcene[ireco]-mcene[imc])/mcene[imc]);
-	     } 
-	    }  
-      } // ireco loop             
+          cout<<" ireco"<<ireco<< " dr_tmp="<<dR<<" pt="<<rcpart.Pt()<<endl;
+          double this_dR = rcpart.DrEtaPhi(simpart);
+           cout<<" dR="<<this_dR<<endl;
+          if (this_dR < dR) {
+              dR = this_dR;
+              RecoPionAss.SetPxPyPzE(rcmox[ireco],rcmoy[ireco],rcmoz[ireco], rcene[ireco]);
+              
+                }
+                } // ireco loop
+              if(dR<0.01){
+                 // cout<<" sim is reco! simPDG="<<mcpdg[imc]<<" reco pdg="<<rctyp[ireco]<<" DR="<<dR<<endl;
+                  cout<<" sim is reco! simPDG="<<mcpdg[imc]<<" DR="<<dR<<" reco Pt="<<RecoPionAss.Pt()<<endl;
+
+                  hRecoMatched_Energy->Fill(RecoPionAss.E());
+                  hEnergyRes->Fill((RecoPionAss.E()-mcene[imc])/mcene[imc]);
+              }
+          
+       
+        }
       
-      
-    } // imc loop
+        } // imc loop
 
       for (int ireco=0; ireco<nrec; ++ireco){
           h_reco_pdg->Fill(rctyp[ireco]);
