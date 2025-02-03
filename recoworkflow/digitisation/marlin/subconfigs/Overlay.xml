@@ -51,12 +51,33 @@
 
   <processor name="OverlayFull" type="OverlayTimingGeneric">
     <parameter name="BackgroundFileNames" type="StringVec">
-      /eos/experiment/muoncollider/data/BIB/MuCollv1_25ns_nEkin150MeV_QGSPBERT/sim_mumu-1e3x500-26m-lowth-excl_seed0000_allHits.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_0.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_1.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_2.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_3.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_4.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_5.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_6.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_7.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_8.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_9.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_0.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_1.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_2.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_3.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_4.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_5.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_6.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_7.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_8.slcio
+      /lustre/cms/store/user/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_9.slcio
+
+      <!--/eos/experiment/muoncollider/data/BIB/MuCollv1_25ns_nEkin150MeV_QGSPBERT/sim_mumu-1e3x500-26m-lowth-excl_seed0000_allHits.slcio
       /eos/experiment/muoncollider/data/BIB/MuCollv1_25ns_nEkin150MeV_QGSPBERT/sim_mumu-1e3x500-26m-lowth-excl_seed0001_allHits.slcio
       /eos/experiment/muoncollider/data/BIB/MuCollv1_25ns_nEkin150MeV_QGSPBERT/sim_mumu-1e3x500-26m-lowth-excl_seed0002_allHits.slcio
       /eos/experiment/muoncollider/data/BIB/MuCollv1_25ns_nEkin150MeV_QGSPBERT/sim_mumu-1e3x500-26m-lowth-excl_seed0003_allHits.slcio
       /eos/experiment/muoncollider/data/BIB/MuCollv1_25ns_nEkin150MeV_QGSPBERT/sim_mumu-1e3x500-26m-lowth-excl_seed0004_allHits.slcio
-      /eos/experiment/muoncollider/data/BIB/MuCollv1_25ns_nEkin150MeV_QGSPBERT/sim_mumu-1e3x500-26m-lowth-excl_seed0005_allHits.slcio
+      /eos/experiment/muoncollider/data/BIB/MuCollv1_25ns_nEkin150MeV_QGSPBERT/sim_mumu-1e3x500-26m-lowth-excl_seed0005_allHits.slcio-->
     </parameter>
     <parameter name="NumberBackground" type="float" value="1" />
     <parameter name="StartBackgroundFileIndex" type="int" value="-1"/>
@@ -71,7 +92,28 @@
 
   <processor name="OverlayTest" type="OverlayTimingGeneric">
     <parameter name="BackgroundFileNames" type="StringVec">
-      /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mumi.000.slcio
+     /lustrehome/lgeneros/mucoll-studies/cnafBIB/sim_mumu-1e3x500-26m-lowth-excl_seed0718_allHits.slcio
+       <!--/lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_0.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_1.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_2.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_3.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_4.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_5.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_6.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_7.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_8.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_mi_0000_9.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_0.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_1.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_2.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_3.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_4.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_5.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_6.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_7.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_8.slcio
+      /lustrehome/lgeneros/mucoll-studies/BIB/Fluka_3TeV_MuColl_v1/seed_pl_0000_9.slcio
+     /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mumi.000.slcio
       /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mumi.001.slcio
       /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mumi.002.slcio
       /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mumi.003.slcio
@@ -80,7 +122,7 @@
       /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mupl.001.slcio
       /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mupl.002.slcio
       /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mupl.003.slcio
-      /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mupl.004.slcio
+      /cvmfs/muoncollider.cern.ch/datasets/bib/MuColl_v1/example/mupl.004.slcio -->
     </parameter>
     <parameter name="NumberBackground" type="float" value="100" />
   </processor>

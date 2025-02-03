@@ -14,8 +14,14 @@ href="http://ilcsoft.desy.de/marlin/marlin.xsl"?
   <execute>
 
     <processor name="MyAIDAProcessor"/>
+<!-- ==========  Geometry initialization  ========== -->
+    <processor name="InitDD4hep_mod4"/>
     <processor name="MergeCaloHits" />
     <processor name="MergeSimCaloHits" />
+    <group name="MergeCollections" />
+    <processor name="MyTrueMCintoRecoForJets"/>
+    <processor name="MyFastGenJetProcessor"/>
+    <processor name="JetHistogramGenJetTuple"/>
     <processor name="MyLCTuple" />
   </execute>
 
@@ -57,11 +63,13 @@ href="http://ilcsoft.desy.de/marlin/marlin.xsl"?
    <parameter name="InputCollections" type="StringVec">
      HCALBarrelHits
      HCALEndcapHits
-     HCALOtherHits      
+     HCALOtherHits
+     ECALBarrelHits
+     ECALEndcapHits
    </parameter>
   <!--Optional IDs for input collections - if given id will be added to all objects in merged collections as ext<CollID>()-->
    <parameter name="InputCollectionIDs" type="IntVec">
-     7 8 9 
+     7 8 9 4 5
    </parameter>
    <!--Name of output collection-->
    <parameter name="OutputCollection" type="string">CaloHits </parameter>
@@ -77,15 +85,49 @@ href="http://ilcsoft.desy.de/marlin/marlin.xsl"?
      HCalBarrelCollection
      HCalEndcapCollection
      HCalRingCollection
+     ECalBarrelCollection
+     ECalEndcapCollection
+
    </parameter>
   <!--Optional IDs for input collections - if given id will be added to all objects in merged collections as ext<CollID>()-->
    <parameter name="InputCollectionIDs" type="IntVec">
-     1 2 3 
+     1 2 3 4 5 
    </parameter>
    <parameter name="OutputCollection" type="string">SimCaloHits </parameter>
    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
    <parameter name="Verbosity" type="string">DEBUG </parameter>
  </processor>
+
+   <!-- ========== true jet clustering========== -->
+  <processor name="MyTrueMCintoRecoForJets" type="TrueMCintoRecoForJets">
+    <!--name of the pseudo RecoParticleCollection made from MCParticles-->
+    <parameter name="RECOParticleCollectionName" type="string" lcioInType="ReconstructedParticle">MCParticlePandoraPFOs</parameter>
+    <!--Name of the MCParticle input collection-->
+    <parameter name="MCParticleInputCollectionName" type="string" lcioInType="McParticle">MCParticle</parameter>
+    <!-- flag to ignore all neutrinos for GenJet filling-->
+    <parameter name="ignoreNeutrinosInMCJets" type="bool">true</parameter>
+    <!-- flag to veto all stable daughters of all vector boson leptons including neutrinos before MCTruthJet filling-->
+    <parameter name="vetoBosonLeptons" type="bool">false</parameter>
+    <!-- flag to veto PFOs angularly matched to MC e,mu's from vector bosons on RECO level, only then recoparticle jet collection will be filled-->
+    <parameter name="vetoBosonLeptonsOnReco" type="bool">false</parameter>
+    <!-- cosAngle for matching checks of PFOs and gen e and mu's from MC vector bosons, 0.995 corresponds to an angle of 5.7 degrees, veto-cone of 0.10 rad-->
+    <parameter name="cosAngle_pfo_lepton" type="float">0.995</parameter>
+   <!--name of the RecoParticleCollection removingleptons-->
+    <parameter name="RecoParticleNoLeptonCollectionName" type="string" lcioInType="ReconstructedParticle"></parameter>
+    <!--Name of the MCParticle input collection-->
+    <parameter name="RecoParticleInputCollectionName" type="string" lcioInType="ReconstructedParticle">MergedRecoParticles</parameter>
+  </processor>
+
+<processor name="MyFastGenJetProcessor" type="FastJetProcessor">
+  <parameter name="recParticleIn" type="string" lcioInType="ReconstructedParticle"> MCParticlePandoraPFOs </parameter>
+  <!--parameters are R, beta, gamma -->
+  <parameter name="algorithm" type="StringVec"> kt_algorithm 1. </parameter>
+  <parameter name="clusteringMode" type="StringVec"> Inclusive 5 </parameter>
+  <parameter name="recombinationScheme" type="string">E_scheme </parameter>
+  <parameter name="jetOut" type="string" lcioOutType="ReconstructedParticle">GenJet</parameter>
+  <parameter name="storeParticlesInJets" type="bool">true</parameter>
+  <parameter name="recParticleOut" type="string" lcioOutType="ReconstructedParticle">PFOsFromGenJets</parameter>
+</processor>
 
   
   <!-- ======================================================= -->
@@ -102,7 +144,7 @@ href="http://ilcsoft.desy.de/marlin/marlin.xsl"?
     <!--Name of the IsoLep collection-->
     <parameter name="IsoLepCollection" type="string" lcioInType="ReconstructedParticle"> </parameter>
     <!--Name of the Jet collection-->
-    <parameter name="JetCollection" type="string" lcioInType="ReconstructedParticle">RefinedVertexJets</parameter>
+    <parameter name="JetCollection" type="string" lcioInType="ReconstructedParticle">JetOut</parameter>
     <!--Switch to write out extra parameters calculated using information from Jet Finder-->
     <parameter name="JetCollectionExtraParameters" type="bool">true </parameter>
     <!--Switch to write out jet parameters coming from LCFIPlus tagging processor-->
@@ -162,9 +204,46 @@ href="http://ilcsoft.desy.de/marlin/marlin.xsl"?
     <parameter name="WriteVertexCollectionParameters" type="bool">false </parameter>
   </processor>
 
+    <processor name="JetHistogramGenJetTuple" type="LCTuple">
+	    <parameter name="JetCollection" type="string" lcioInType="ReconstructedParticle"> GenJet </parameter>
+	  </processor>
 
 
-
-
+    <!-- ======================================================================================================== -->
+  <!-- ======================================================================================================== -->
+  <!-- == DD4hep configuration                                                                               == -->
+  <!-- ======================================================================================================== -->
+  <!-- ======================================================================================================== -->
   
+  <processor name="InitDD4hep_mod4" type="InitializeDD4hep">
+    <!--InitializeDD4hep reads a compact xml file and initializes the DD4hep::LCDD object-->
+    <!--Name of the DD4hep compact xml file to load-->
+    <parameter name="EncodingStringParameter"> GlobalTrackerReadoutID </parameter>
+    <!-- ALE - Use the modified geometry -->
+    <parameter name="DD4hepXMLFile" type="string">
+      ../MuColl_crilin_large/MuColl_crilin.xml
+    </parameter>
+  </processor>
+
+  <group name="MergeCollections">
+
+    <processor name="MergeRP" type="MergeCollections">
+      <parameter name="CollectionParameterIndex" type="int">0 </parameter>
+      <parameter name="InputCollectionIDs" type="IntVec"> </parameter>
+      <parameter name="InputCollections" type="StringVec"> PandoraPFOs </parameter>  
+      <parameter name="OutputCollection" type="string"> MergedRecoParticles </parameter>
+    </processor>
+
+    <processor name="MergeClusters" type="MergeCollections">
+      <parameter name="CollectionParameterIndex" type="int">0 </parameter>
+      <parameter name="InputCollectionIDs" type="IntVec"> </parameter>
+      <parameter name="InputCollections" type="StringVec"> PandoraClusters </parameter>  
+      <parameter name="OutputCollection" type="string"> MergedClusters </parameter>
+    </processor>
+  </group>
+
+
+
+
+
 </marlin>
